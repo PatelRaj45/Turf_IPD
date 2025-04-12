@@ -1,0 +1,174 @@
+
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+
+const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const timeSlots = [
+  '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', 
+  '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', 
+  '06:00 PM', '07:00 PM'
+];
+
+// Generate dates for the current week
+const generateWeekDates = (startDate: Date) => {
+  const dates = [];
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(startDate);
+    date.setDate(startDate.getDate() + i);
+    dates.push({
+      date: date,
+      dayOfMonth: date.getDate(),
+      dayOfWeek: daysOfWeek[date.getDay()],
+      isToday: i === 0
+    });
+  }
+  return dates;
+};
+
+// Generate mock availability data
+const generateAvailabilityData = () => {
+  const availability: Record<string, Record<string, boolean>> = {};
+  const dates = generateWeekDates(new Date());
+  
+  dates.forEach(day => {
+    const dateKey = day.date.toISOString().split('T')[0];
+    availability[dateKey] = {};
+    
+    timeSlots.forEach(timeSlot => {
+      // Randomly determine if slot is available (70% chance of being available)
+      availability[dateKey][timeSlot] = Math.random() > 0.3;
+    });
+  });
+  
+  return availability;
+};
+
+const BookingCalendar: React.FC = () => {
+  const today = new Date();
+  const [startDate, setStartDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState(today.toISOString().split('T')[0]);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
+  
+  const weekDates = generateWeekDates(startDate);
+  const availabilityData = generateAvailabilityData();
+  
+  const handlePreviousWeek = () => {
+    const prevWeek = new Date(startDate);
+    prevWeek.setDate(startDate.getDate() - 7);
+    setStartDate(prevWeek);
+  };
+  
+  const handleNextWeek = () => {
+    const nextWeek = new Date(startDate);
+    nextWeek.setDate(startDate.getDate() + 7);
+    setStartDate(nextWeek);
+  };
+  
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date.toISOString().split('T')[0]);
+    setSelectedTimeSlot(null);
+  };
+  
+  const handleTimeSlotSelect = (timeSlot: string) => {
+    setSelectedTimeSlot(timeSlot);
+  };
+  
+  return (
+    <Card className="shadow-md">
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-center">
+          <CardTitle className="flex items-center">
+            <CalendarIcon className="mr-2" />
+            Court Availability
+          </CardTitle>
+          <div className="flex space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePreviousWeek}
+              className="h-8 w-8 p-0"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNextWeek}
+              className="h-8 w-8 p-0"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+      
+      <CardContent>
+        {/* Date selection */}
+        <div className="booking-grid gap-2 mb-6">
+          {weekDates.map((day, index) => {
+            const dateKey = day.date.toISOString().split('T')[0];
+            const isSelected = selectedDate === dateKey;
+            
+            return (
+              <Button
+                key={index}
+                variant={isSelected ? "default" : "outline"}
+                className={`flex flex-col items-center py-2 ${
+                  isSelected ? 'bg-sport-green-dark hover:bg-sport-green' : ''
+                } ${day.isToday ? 'border-sport-green' : ''}`}
+                onClick={() => handleDateSelect(day.date)}
+              >
+                <span className="text-xs">{day.dayOfWeek}</span>
+                <span className="text-lg font-bold">{day.dayOfMonth}</span>
+              </Button>
+            );
+          })}
+        </div>
+        
+        {/* Time slot selection */}
+        <div className="mt-4">
+          <div className="flex items-center mb-2">
+            <Clock className="mr-2 h-4 w-4" />
+            <h3 className="font-medium">Available Time Slots</h3>
+          </div>
+          
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+            {timeSlots.map((timeSlot, index) => {
+              const isAvailable = availabilityData[selectedDate]?.[timeSlot];
+              const isSelected = selectedTimeSlot === timeSlot;
+              
+              return (
+                <Button
+                  key={index}
+                  variant={isSelected ? "default" : "outline"}
+                  className={`${
+                    isSelected ? 'bg-sport-green-dark hover:bg-sport-green' : ''
+                  } ${!isAvailable ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={!isAvailable}
+                  onClick={() => handleTimeSlotSelect(timeSlot)}
+                >
+                  {timeSlot}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+        
+        {/* Booking button */}
+        {selectedTimeSlot && (
+          <div className="mt-6">
+            <Button 
+              className="w-full bg-sport-green-dark hover:bg-sport-green text-white"
+            >
+              Book Court for {selectedTimeSlot}
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+export default BookingCalendar;
