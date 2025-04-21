@@ -136,11 +136,11 @@ const BookingCalendar: React.FC = () => {
             className="w-full p-3 border rounded-md bg-white text-sm focus:ring-2 focus:ring-sport-green-dark"
             defaultValue="bandra"
           >
-            <option value="bandra">Bandra Reclamation Ground</option>
-            <option value="andheri">Andheri Sports Complex</option>
-            <option value="powai">Powai Sports Club</option>
-            <option value="worli">Worli Sports Center</option>
-            <option value="thane">Thane Sports Arena</option>
+            <option value="bandra">Bandra Basketball Court</option>
+            <option value="juhu">Juhu Soccer Ground</option>
+            <option value="matunga">Matunga Tennis Club</option>
+            <option value="chowpatty">Chowpatty Beach Volleyball</option>
+            <option value="powai">Powai Sports Complex</option>
           </select>
         </div>
 

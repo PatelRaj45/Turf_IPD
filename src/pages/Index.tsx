@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -12,47 +13,47 @@ import { Button } from '@/components/ui/button';
 const sampleCourts = [
   {
     id: '1',
-    name: 'Downtown Basketball Arena',
+    name: 'Bandra Basketball Court',
     image: 'https://images.unsplash.com/photo-1504450758481-7338eba7524a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80',
     type: 'basketball',
-    address: '123 Main St',
+    address: 'Carter Road, Bandra West',
     rating: 4.8,
-    price: 45,
+    price: 800,
     availableSlots: 6,
-    distance: '1.2 miles'
+    distance: '1.2 km'
   },
   {
     id: '2',
-    name: 'Central Park Soccer Field',
+    name: 'Juhu Soccer Ground',
     image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
     type: 'soccer',
-    address: '456 Park Ave',
+    address: 'JVPD Scheme, Juhu',
     rating: 4.5,
-    price: 60,
+    price: 1200,
     availableSlots: 3,
-    distance: '0.8 miles'
+    distance: '3.5 km'
   },
   {
     id: '3',
-    name: 'Westside Tennis Club',
+    name: 'Matunga Tennis Club',
     image: 'https://images.unsplash.com/photo-1622279457486-28f560949036?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
     type: 'tennis',
-    address: '789 West Blvd',
+    address: 'Matunga East',
     rating: 4.9,
-    price: 35,
+    price: 1500,
     availableSlots: 8,
-    distance: '2.4 miles'
+    distance: '4.2 km'
   },
   {
     id: '4',
-    name: 'Eastside Volleyball Courts',
+    name: 'Chowpatty Beach Volleyball',
     image: 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1307&q=80',
     type: 'volleyball',
-    address: '101 Beach Dr',
+    address: 'Girgaon Chowpatty',
     rating: 4.6,
-    price: 30,
+    price: 600,
     availableSlots: 5,
-    distance: '3.1 miles'
+    distance: '2.8 km'
   }
 ];
 
@@ -60,32 +61,32 @@ const sampleCourts = [
 const samplePlayers = [
   {
     id: '1',
-    name: 'Alex Johnson',
-    sports: ['Basketball', 'Soccer'],
+    name: 'Arjun Sharma',
+    sports: ['Basketball', 'Cricket'],
     skillLevel: 4,
     totalGames: 45,
     winRate: 72,
-    location: 'San Francisco',
+    location: 'Andheri West',
     availability: 'Evenings & Weekends'
   },
   {
     id: '2',
-    name: 'Sara Williams',
-    sports: ['Tennis', 'Volleyball'],
+    name: 'Priya Patel',
+    sports: ['Tennis', 'Badminton'],
     skillLevel: 5,
     totalGames: 67,
     winRate: 81,
-    location: 'Oakland',
+    location: 'Powai',
     availability: 'Weekends'
   },
   {
     id: '3',
-    name: 'Mike Chen',
-    sports: ['Basketball', 'Tennis'],
+    name: 'Raj Malhotra',
+    sports: ['Basketball', 'Football'],
     skillLevel: 3,
     totalGames: 28,
     winRate: 64,
-    location: 'San Jose',
+    location: 'Bandra East',
     availability: 'Evenings'
   }
 ];
@@ -95,13 +96,13 @@ const sampleMatches = [
   {
     id: '1',
     sportType: 'Basketball',
-    courtName: 'Downtown Basketball Arena',
-    location: '123 Main St',
+    courtName: 'Bandra Basketball Court',
+    location: 'Carter Road, Bandra West',
     dateTime: 'Aug 12 6:00 PM',
     players: [
-      { id: '1', name: 'Alex Johnson', skillLevel: 4 },
-      { id: '2', name: 'Marcus Davis', skillLevel: 4 },
-      { id: '3', name: 'Elena Park', skillLevel: 3 },
+      { id: '1', name: 'Arjun Sharma', skillLevel: 4 },
+      { id: '2', name: 'Rohan Mehta', skillLevel: 4 },
+      { id: '3', name: 'Neha Singh', skillLevel: 3 },
     ],
     spotsAvailable: 1,
     skillLevel: 'Intermediate',
@@ -110,15 +111,15 @@ const sampleMatches = [
   },
   {
     id: '2',
-    sportType: 'Soccer',
-    courtName: 'Central Park Soccer Field',
-    location: '456 Park Ave',
+    sportType: 'Football',
+    courtName: 'Juhu Soccer Ground',
+    location: 'JVPD Scheme, Juhu',
     dateTime: 'Aug 13 4:30 PM',
     players: [
-      { id: '4', name: 'Lucas Smith', skillLevel: 5 },
-      { id: '5', name: 'Olivia Wang', skillLevel: 4 },
-      { id: '6', name: 'Daniel Lee', skillLevel: 5 },
-      { id: '7', name: 'Sophie Kim', skillLevel: 4 },
+      { id: '4', name: 'Kunal Verma', skillLevel: 5 },
+      { id: '5', name: 'Anjali Desai', skillLevel: 4 },
+      { id: '6', name: 'Deepak Kumar', skillLevel: 5 },
+      { id: '7', name: 'Sanya Shah', skillLevel: 4 },
     ],
     spotsAvailable: 2,
     skillLevel: 'Advanced',
