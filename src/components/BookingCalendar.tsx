@@ -1,17 +1,15 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, MapPin } from 'lucide-react';
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const timeSlots = [
-  '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', 
-  '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', 
-  '06:00 PM', '07:00 PM'
+  '06:00 AM', '07:00 AM', '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM',
+  '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
+  '06:00 PM', '07:00 PM', '08:00 PM', '09:00 PM'
 ];
 
-// Generate dates for the current week
 const generateWeekDates = (startDate: Date) => {
   const dates = [];
   for (let i = 0; i < 7; i++) {
@@ -27,7 +25,6 @@ const generateWeekDates = (startDate: Date) => {
   return dates;
 };
 
-// Generate mock availability data
 const generateAvailabilityData = () => {
   const availability: Record<string, Record<string, boolean>> = {};
   const dates = generateWeekDates(new Date());
@@ -37,8 +34,9 @@ const generateAvailabilityData = () => {
     availability[dateKey] = {};
     
     timeSlots.forEach(timeSlot => {
-      // Randomly determine if slot is available (70% chance of being available)
-      availability[dateKey][timeSlot] = Math.random() > 0.3;
+      const hour = parseInt(timeSlot.split(':')[0]);
+      const isPeakHour = (hour >= 6 && hour <= 9) || (hour >= 16 && hour <= 20);
+      availability[dateKey][timeSlot] = Math.random() > (isPeakHour ? 0.2 : 0.4);
     });
   });
   
@@ -76,10 +74,10 @@ const BookingCalendar: React.FC = () => {
   };
   
   return (
-    <Card className="shadow-md">
-      <CardHeader className="pb-2">
+    <Card className="shadow-lg">
+      <CardHeader className="pb-2 border-b">
         <div className="flex justify-between items-center">
-          <CardTitle className="flex items-center">
+          <CardTitle className="flex items-center text-sport-green-dark">
             <CalendarIcon className="mr-2" />
             Court Availability
           </CardTitle>
@@ -105,8 +103,7 @@ const BookingCalendar: React.FC = () => {
       </CardHeader>
       
       <CardContent>
-        {/* Date selection */}
-        <div className="booking-grid gap-2 mb-6">
+        <div className="booking-grid gap-2 mb-6 border-b pb-4">
           {weekDates.map((day, index) => {
             const dateKey = day.date.toISOString().split('T')[0];
             const isSelected = selectedDate === dateKey;
@@ -120,21 +117,37 @@ const BookingCalendar: React.FC = () => {
                 } ${day.isToday ? 'border-sport-green' : ''}`}
                 onClick={() => handleDateSelect(day.date)}
               >
-                <span className="text-xs">{day.dayOfWeek}</span>
+                <span className="text-xs font-medium">{day.dayOfWeek}</span>
                 <span className="text-lg font-bold">{day.dayOfMonth}</span>
               </Button>
             );
           })}
         </div>
         
-        {/* Time slot selection */}
+        <div className="mb-6">
+          <h3 className="text-sm font-medium mb-2 flex items-center">
+            <MapPin className="h-4 w-4 mr-1" />
+            Select Location
+          </h3>
+          <select
+            className="w-full p-2 border rounded-md bg-white"
+            defaultValue="andheri"
+          >
+            <option value="andheri">Andheri Sports Complex</option>
+            <option value="bandra">Bandra Reclamation Ground</option>
+            <option value="powai">Powai Sports Club</option>
+            <option value="worli">Worli Sports Center</option>
+            <option value="thane">Thane Sports Arena</option>
+          </select>
+        </div>
+
         <div className="mt-4">
-          <div className="flex items-center mb-2">
-            <Clock className="mr-2 h-4 w-4" />
+          <div className="flex items-center mb-4">
+            <Clock className="mr-2 h-4 w-4 text-sport-green-dark" />
             <h3 className="font-medium">Available Time Slots</h3>
           </div>
           
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+          <div className="grid grid-cols-4 gap-2 max-h-[300px] overflow-y-auto p-2">
             {timeSlots.map((timeSlot, index) => {
               const isAvailable = availabilityData[selectedDate]?.[timeSlot];
               const isSelected = selectedTimeSlot === timeSlot;
@@ -145,7 +158,8 @@ const BookingCalendar: React.FC = () => {
                   variant={isSelected ? "default" : "outline"}
                   className={`${
                     isSelected ? 'bg-sport-green-dark hover:bg-sport-green' : ''
-                  } ${!isAvailable ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  } ${!isAvailable ? 'opacity-50 cursor-not-allowed' : ''}
+                  text-sm py-2 h-auto`}
                   disabled={!isAvailable}
                   onClick={() => handleTimeSlotSelect(timeSlot)}
                 >
@@ -156,11 +170,10 @@ const BookingCalendar: React.FC = () => {
           </div>
         </div>
         
-        {/* Booking button */}
         {selectedTimeSlot && (
           <div className="mt-6">
             <Button 
-              className="w-full bg-sport-green-dark hover:bg-sport-green text-white"
+              className="w-full bg-sport-green-dark hover:bg-sport-green text-white font-medium py-3"
             >
               Book Court for {selectedTimeSlot}
             </Button>

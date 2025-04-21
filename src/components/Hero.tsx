@@ -21,7 +21,7 @@ const Hero = () => {
             Find Your Perfect <span className="text-sport-orange">Match</span>
           </h1>
           <p className="text-lg md:text-xl text-white/90 mb-8">
-            Book courts, find teammates, and get matched with players at your skill level - all powered by our AI matchmaking system.
+            Book courts, find teammates, and get matched with players at your skill level all powered by our AI matchmaking system.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4">
