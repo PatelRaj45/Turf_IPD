@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -75,10 +76,10 @@ const BookingCalendar: React.FC = () => {
   
   return (
     <Card className="shadow-lg">
-      <CardHeader className="pb-2 border-b">
+      <CardHeader className="pb-4 border-b">
         <div className="flex justify-between items-center">
           <CardTitle className="flex items-center text-sport-green-dark">
-            <CalendarIcon className="mr-2" />
+            <CalendarIcon className="mr-3" />
             Court Availability
           </CardTitle>
           <div className="flex space-x-2">
@@ -102,8 +103,8 @@ const BookingCalendar: React.FC = () => {
         </div>
       </CardHeader>
       
-      <CardContent>
-        <div className="booking-grid gap-2 mb-6 border-b pb-4">
+      <CardContent className="space-y-6 p-6">
+        <div className="booking-grid gap-4 mb-8 pb-6 border-b">
           {weekDates.map((day, index) => {
             const dateKey = day.date.toISOString().split('T')[0];
             const isSelected = selectedDate === dateKey;
@@ -112,7 +113,7 @@ const BookingCalendar: React.FC = () => {
               <Button
                 key={index}
                 variant={isSelected ? "default" : "outline"}
-                className={`flex flex-col items-center py-2 ${
+                className={`flex flex-col items-center py-3 px-2 space-y-1 ${
                   isSelected ? 'bg-sport-green-dark hover:bg-sport-green' : ''
                 } ${day.isToday ? 'border-sport-green' : ''}`}
                 onClick={() => handleDateSelect(day.date)}
@@ -124,30 +125,30 @@ const BookingCalendar: React.FC = () => {
           })}
         </div>
         
-        <div className="mb-6">
-          <h3 className="text-sm font-medium mb-2 flex items-center">
-            <MapPin className="h-4 w-4 mr-1" />
-            Select Location
-          </h3>
+        <div className="mb-6 space-y-2">
+          <div className="flex items-center space-x-2 text-sm font-medium">
+            <MapPin className="h-5 w-5 text-sport-green-dark" />
+            <h3>Select Location</h3>
+          </div>
           <select
-            className="w-full p-2 border rounded-md bg-white"
-            defaultValue="andheri"
+            className="w-full p-3 border rounded-md bg-white text-sm focus:ring-2 focus:ring-sport-green-dark"
+            defaultValue="bandra"
           >
-            <option value="andheri">Andheri Sports Complex</option>
             <option value="bandra">Bandra Reclamation Ground</option>
+            <option value="andheri">Andheri Sports Complex</option>
             <option value="powai">Powai Sports Club</option>
             <option value="worli">Worli Sports Center</option>
             <option value="thane">Thane Sports Arena</option>
           </select>
         </div>
 
-        <div className="mt-4">
-          <div className="flex items-center mb-4">
-            <Clock className="mr-2 h-4 w-4 text-sport-green-dark" />
-            <h3 className="font-medium">Available Time Slots</h3>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <Clock className="mr-2 h-5 w-5 text-sport-green-dark" />
+            <h3 className="text-sm font-medium">Available Time Slots</h3>
           </div>
           
-          <div className="grid grid-cols-4 gap-2 max-h-[300px] overflow-y-auto p-2">
+          <div className="grid grid-cols-4 gap-3 max-h-[300px] overflow-y-auto p-2 bg-gray-50 rounded-md">
             {timeSlots.map((timeSlot, index) => {
               const isAvailable = availabilityData[selectedDate]?.[timeSlot];
               const isSelected = selectedTimeSlot === timeSlot;
