@@ -80,7 +80,7 @@ const BookingCalendar: React.FC = () => {
         <div className="flex justify-between items-center">
           <CardTitle className="flex items-center text-sport-green-dark">
             <CalendarIcon className="mr-3" />
-            Court Availability
+            Book a Court
           </CardTitle>
           <div className="flex space-x-2">
             <Button
@@ -103,8 +103,8 @@ const BookingCalendar: React.FC = () => {
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-6 p-6">
-        <div className="booking-grid gap-4 mb-8 pb-6 border-b">
+      <CardContent className="p-6">
+        <div className="grid grid-cols-7 gap-2">
           {weekDates.map((day, index) => {
             const dateKey = day.date.toISOString().split('T')[0];
             const isSelected = selectedDate === dateKey;
@@ -113,9 +113,11 @@ const BookingCalendar: React.FC = () => {
               <Button
                 key={index}
                 variant={isSelected ? "default" : "outline"}
-                className={`flex flex-col items-center py-3 px-2 space-y-1 ${
-                  isSelected ? 'bg-sport-green-dark hover:bg-sport-green' : ''
-                } ${day.isToday ? 'border-sport-green' : ''}`}
+                className={`flex flex-col items-center py-3 px-2 h-20 ${
+                  isSelected 
+                    ? 'bg-sport-green-dark hover:bg-sport-green text-white' 
+                    : 'hover:bg-gray-100'
+                } ${day.isToday ? 'border-sport-green border-2' : ''}`}
                 onClick={() => handleDateSelect(day.date)}
               >
                 <span className="text-xs font-medium">{day.dayOfWeek}</span>
