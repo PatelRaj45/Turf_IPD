@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -210,7 +209,11 @@ const Index = () => {
               <Button size="lg" className="bg-white text-sport-green-dark hover:bg-gray-100">
                 Sign Up Now
               </Button>
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white text-white hover:bg-white/20 hover:text-white"
+              >
                 Learn More
               </Button>
             </div>
