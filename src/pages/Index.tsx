@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -36,7 +35,7 @@ const sampleCourts = [
   {
     id: '3',
     name: 'Khar Tennis Academy',
-    image: 'https://images.unsplash.com/photo-1599019195211-224fb1975f8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1631&q=80',
+    image: 'https://images.squarespace-cdn.com/content/v1/5a97763275f9eeee0b6f77f0/e8a60002-d55b-4ce1-b242-d7cf83b72b97/Tennis+Grass+Court.jpg',
     type: 'tennis',
     address: 'Khar West',
     rating: 4.9,
