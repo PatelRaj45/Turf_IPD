@@ -13,7 +13,7 @@ const Navbar = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
           <Trophy size={32} className="text-sport-green-dark" />
-          <span className="font-bold text-xl text-sport-green-dark">Match Play AI Arena</span>
+          <span className="font-bold text-xl text-sport-green-dark">Sports Arena</span>
         </Link>
 
         {/* Desktop Navigation */}

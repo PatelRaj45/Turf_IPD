@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Trophy, Phone, Mail, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
@@ -12,7 +11,7 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-1 lg:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
               <Trophy size={32} className="text-sport-green" />
-              <span className="font-bold text-xl">Match Play AI Arena</span>
+              <span className="font-bold text-xl">Sports Arena</span>
             </div>
             <p className="text-gray-400 mb-6">
               Find courts, teammates, and opponents with our AI-powered sports matchmaking platform.
@@ -95,17 +94,17 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center space-x-3">
                 <Phone size={16} className="text-sport-green" />
-                <span className="text-gray-400">(123) 456-7890</span>
+                <span className="text-gray-400">+91 (22) 4567-8900</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail size={16} className="text-sport-green" />
-                <span className="text-gray-400">info@matchplay.ai</span>
+                <span className="text-gray-400">info@sportsarena.in</span>
               </li>
               <li className="flex items-start space-x-3">
                 <MapPin size={16} className="text-sport-green mt-1" />
                 <span className="text-gray-400">
                   123 Sports Lane<br />
-                  San Francisco, CA 94107
+                  Mumbai, Maharashtra 400001
                 </span>
               </li>
             </ul>
@@ -115,7 +114,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-10 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-500 text-sm mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} Match Play AI Arena. All rights reserved.
+              &copy; {new Date().getFullYear()} Sports Arena. All rights reserved.
             </div>
             <div className="flex space-x-6">
               <Link to="/privacy" className="text-gray-500 hover:text-sport-green text-sm">

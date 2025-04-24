@@ -13,10 +13,10 @@ import { Button } from '@/components/ui/button';
 const sampleCourts = [
   {
     id: '1',
-    name: 'Bandra Basketball Court',
+    name: 'Andheri Sports Complex',
     image: 'https://images.unsplash.com/photo-1504450758481-7338eba7524a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80',
     type: 'basketball',
-    address: 'Carter Road, Bandra West',
+    address: 'Andheri West',
     rating: 4.8,
     price: 800,
     availableSlots: 6,
@@ -24,7 +24,7 @@ const sampleCourts = [
   },
   {
     id: '2',
-    name: 'Juhu Soccer Ground',
+    name: 'Juhu Football Ground',
     image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
     type: 'soccer',
     address: 'JVPD Scheme, Juhu',
@@ -35,10 +35,10 @@ const sampleCourts = [
   },
   {
     id: '3',
-    name: 'Matunga Tennis Club',
-    image: 'https://images.unsplash.com/photo-1622279457486-28f560949036?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+    name: 'Khar Tennis Academy',
+    image: 'https://images.unsplash.com/photo-1599019195211-224fb1975f8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1631&q=80',
     type: 'tennis',
-    address: 'Matunga East',
+    address: 'Khar West',
     rating: 4.9,
     price: 1500,
     availableSlots: 8,
@@ -46,7 +46,7 @@ const sampleCourts = [
   },
   {
     id: '4',
-    name: 'Chowpatty Beach Volleyball',
+    name: 'Girgaon Beach Volleyball',
     image: 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1307&q=80',
     type: 'volleyball',
     address: 'Girgaon Chowpatty',

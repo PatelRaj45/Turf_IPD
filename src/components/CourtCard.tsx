@@ -67,7 +67,7 @@ const CourtCard: React.FC<CourtCardProps> = ({
             <span>{availableSlots} slots today</span>
           </div>
           <div className="font-semibold">
-            ${price}/hour
+            ₹{price}/hour
           </div>
         </div>
       </CardContent>
