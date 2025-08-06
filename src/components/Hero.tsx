@@ -1,9 +1,35 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Search, CalendarDays, Users } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Hero = () => {
+  const [selectedSport, setSelectedSport] = useState('Cricket');
+  const [location, setLocation] = useState('');
+  
+  const sports = [
+    'Cricket',
+    'Football',
+    'Basketball',
+    'Pickleball',
+    'Tennis',
+    'Volleyball',
+    'Badminton'
+  ];
+  
+  const handleSearch = () => {
+    // This would typically call an API with the selected sport and location
+    console.log(`Searching for ${selectedSport} courts in ${location}`);
+    // Example API call:
+    // axios.get(`/api/turfs?location=${location}&sport=${selectedSport}`);
+  };
   return (
     <div className="bg-gradient-to-br from-sport-green-dark to-sport-green relative overflow-hidden">
       <div 
@@ -24,15 +50,44 @@ const Hero = () => {
             Book courts, find teammates, and get matched with players at your skill level all powered by our AI matchmaking system.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button size="lg" className="bg-white text-sport-green-dark hover:bg-gray-100 flex items-center space-x-2">
-              <Search size={20} />
-              <span>Find Courts</span>
-            </Button>
-            <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 flex items-center space-x-2">
-              <Users size={20} />
-              <span>Find Players</span>
-            </Button>
+          <div className="flex flex-col w-full max-w-xl gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-3 w-full">
+              <Select value={selectedSport} onValueChange={setSelectedSport}>
+                <SelectTrigger className="bg-white text-sport-green-dark h-12">
+                  <SelectValue placeholder="Select Sport" />
+                </SelectTrigger>
+                <SelectContent>
+                  {sports.map((sport) => (
+                    <SelectItem key={sport} value={sport}>{sport}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <div className="relative flex-grow">
+                <input
+                  type="text"
+                  placeholder="Enter location"
+                  className="w-full h-12 px-4 rounded-md border border-input bg-white text-sport-green-dark focus:outline-none focus:ring-2 focus:ring-sport-green"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+              </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button 
+                size="lg" 
+                className="bg-white text-sport-green-dark hover:bg-gray-100 flex items-center space-x-2"
+                onClick={handleSearch}
+              >
+                <Search size={20} />
+                <span>Find Courts</span>
+              </Button>
+              <Button size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 flex items-center space-x-2">
+                <Users size={20} />
+                <span>Find Players</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

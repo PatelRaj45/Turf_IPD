@@ -9,7 +9,8 @@ interface CourtCardProps {
   id: string;
   name: string;
   image: string;
-  type: string;
+  type: string; // Primary type (for backward compatibility)
+  sports: string[]; // All supported sports
   address: string;
   rating: number;
   price: number;
@@ -22,12 +23,26 @@ const CourtCard: React.FC<CourtCardProps> = ({
   name,
   image,
   type,
+  sports = [], // Default to empty array if not provided
   address,
   rating,
   price,
   availableSlots,
   distance
 }) => {
+  // Sport emoji mapping
+  const sportEmojis: Record<string, string> = {
+    'Cricket': '🏏',
+    'Football': '⚽',
+    'Basketball': '🏀',
+    'Pickleball': '🏓',
+    'Tennis': '🎾',
+    'Volleyball': '🏐',
+    'Badminton': '🏸'
+  };
+  
+  // If sports array is empty, use the type as fallback
+  const displaySports = sports.length > 0 ? sports : [type];
   return (
     <Card className="court-card overflow-hidden">
       <div className="relative h-48">
@@ -39,8 +54,12 @@ const CourtCard: React.FC<CourtCardProps> = ({
         <Badge 
           className={`absolute top-2 left-2 ${
             type === 'basketball' ? 'bg-sport-court' : 
-            type === 'soccer' ? 'bg-sport-turf' : 
-            type === 'tennis' ? 'bg-sport-orange' : 'bg-sport-blue'
+            type === 'soccer' || type === 'football' ? 'bg-sport-turf' : 
+            type === 'tennis' ? 'bg-sport-orange' : 
+            type === 'cricket' ? 'bg-sport-green-dark' :
+            type === 'volleyball' ? 'bg-yellow-500' :
+            type === 'badminton' ? 'bg-purple-500' :
+            type === 'pickleball' ? 'bg-pink-500' : 'bg-sport-blue'
           }`}
         >
           {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -59,6 +78,18 @@ const CourtCard: React.FC<CourtCardProps> = ({
         <div className="flex items-center text-gray-600 text-sm mb-3">
           <MapPin className="w-4 h-4 mr-1" />
           <span>{address} • {distance}</span>
+        </div>
+        
+        <div className="flex flex-wrap gap-1 mb-2">
+          {displaySports.map((sport) => (
+            <Badge 
+              key={sport} 
+              variant="outline" 
+              className="text-xs py-0 h-5 bg-gray-50"
+            >
+              {sportEmojis[sport] || ''} {sport}
+            </Badge>
+          ))}
         </div>
         
         <div className="flex items-center justify-between mt-2 text-sm">

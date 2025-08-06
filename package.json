@@ -8,7 +8,15 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node server.js",
+    "ai": "cd ai_matchmaking && python main.py",
+    "start": "node start-services.js",
+    "menu": "node start.js",
+    "cleanup": "node cleanup.js",
+    "data:import": "node seeder.js -i",
+    "data:destroy": "node seeder.js -d",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -40,14 +48,24 @@
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.4",
     "@tanstack/react-query": "^5.56.2",
+    "axios": "^1.6.0",
+    "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "cors": "^2.8.5",
     "date-fns": "^3.6.0",
+    "dotenv": "^16.5.0",
     "embla-carousel-react": "^8.3.0",
+    "express": "^5.1.0",
+    "google-auth-library": "^9.0.0",
     "input-otp": "^1.2.4",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.462.0",
+    "mongoose": "^8.16.0",
+    "mongoose-slug-generator": "^1.0.4",
     "next-themes": "^0.3.0",
+    "razorpay": "^2.9.6",
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
@@ -74,10 +92,24 @@
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
     "lovable-tagger": "^1.1.7",
+    "nodemon": "^3.1.10",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
-  }
+  },
+  "description": "**URL**: https://lovable.dev/projects/a8ade50d-41a4-480f-b2fe-cac741bb1ca2",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PatelRaj45/match-play-ai-arena.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PatelRaj45/match-play-ai-arena/issues"
+  },
+  "homepage": "https://github.com/PatelRaj45/match-play-ai-arena#readme"
 }

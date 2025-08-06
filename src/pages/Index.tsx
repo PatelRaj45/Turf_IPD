@@ -15,6 +15,7 @@ const sampleCourts = [
     name: 'Andheri Sports Complex',
     image: 'https://images.unsplash.com/photo-1504450758481-7338eba7524a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80',
     type: 'basketball',
+    sports: ['Basketball', 'Cricket', 'Badminton'],
     address: 'Andheri West',
     rating: 4.8,
     price: 800,
@@ -25,7 +26,8 @@ const sampleCourts = [
     id: '2',
     name: 'Juhu Football Ground',
     image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
-    type: 'soccer',
+    type: 'football',
+    sports: ['Football', 'Cricket'],
     address: 'JVPD Scheme, Juhu',
     rating: 4.5,
     price: 1200,
@@ -37,6 +39,7 @@ const sampleCourts = [
     name: 'Khar Tennis Academy',
     image: 'https://images.squarespace-cdn.com/content/v1/5a97763275f9eeee0b6f77f0/e8a60002-d55b-4ce1-b242-d7cf83b72b97/Tennis+Grass+Court.jpg',
     type: 'tennis',
+    sports: ['Tennis', 'Pickleball'],
     address: 'Khar West',
     rating: 4.9,
     price: 1500,
@@ -48,11 +51,24 @@ const sampleCourts = [
     name: 'Girgaon Beach Volleyball',
     image: 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1307&q=80',
     type: 'volleyball',
+    sports: ['Volleyball', 'Badminton'],
     address: 'Girgaon Chowpatty',
     rating: 4.6,
     price: 600,
     availableSlots: 5,
     distance: '2.8 km'
+  },
+  {
+    id: '5',
+    name: 'Dadar Cricket Ground',
+    image: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1167&q=80',
+    type: 'cricket',
+    sports: ['Cricket'],
+    address: 'Dadar East',
+    rating: 4.7,
+    price: 1000,
+    availableSlots: 4,
+    distance: '5.1 km'
   }
 ];
 
