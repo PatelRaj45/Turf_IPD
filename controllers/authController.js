@@ -15,6 +15,14 @@ export const register = async (req, res, next) => {
   try {
     const { name, email, phone, password, role } = req.body;
 
+    // Validate required fields
+    if (!name || !email || !phone || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide all required fields: name, email, phone, and password'
+      });
+    }
+
     // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -37,6 +45,15 @@ export const register = async (req, res, next) => {
     // Send token response
     sendTokenResponse(user, 201, res);
   } catch (error) {
+    console.error('Registration error:', error);
+    // Improved error handling for validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(val => val.message);
+      return res.status(400).json({
+        success: false,
+        error: messages.join(', ')
+      });
+    }
     next(error);
   }
 };
@@ -79,6 +96,7 @@ export const login = async (req, res, next) => {
     // Send token response
     sendTokenResponse(user, 200, res);
   } catch (error) {
+    console.error('Login error:', error);
     next(error);
   }
 };
@@ -304,7 +322,8 @@ export const linkGoogleAccount = async (req, res, next) => {
  */
 const sendTokenResponse = (user, statusCode, res) => {
   try {
-    // Create token
+    // Create token with fallback secret if needed
+    const secret = process.env.JWT_SECRET || 'fallback_secret_for_development_only_do_not_use_in_production';
     const token = user.getSignedJwtToken();
     
     // Set cookie expiration
@@ -314,7 +333,8 @@ const sendTokenResponse = (user, statusCode, res) => {
       expires: new Date(
         Date.now() + cookieExpire * 24 * 60 * 60 * 1000
       ),
-      httpOnly: true
+      httpOnly: true,
+      sameSite: 'lax' // Added for better cookie security
     };
 
     // Set secure flag in production

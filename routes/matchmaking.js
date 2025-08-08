@@ -1,4 +1,8 @@
 import express from 'express';
+
+// Import middleware
+import { protect } from '../middlewares/auth.js';
+
 import {
   findCompatiblePlayers,
   createMatchRequest,
@@ -10,10 +14,14 @@ import {
   getMatchHistory
 } from '../controllers/matchmakingController.js';
 
-const router = express.Router();
+// Import AI matchmaking controllers
+import {
+  getSports,
+  getAIRecommendations,
+  updateAIModel
+} from '../controllers/aiMatchmakingController.js';
 
-// Import middleware
-import { protect } from '../middlewares/auth.js';
+const router = express.Router();
 
 // Routes
 router.route('/find-players')
@@ -26,7 +34,8 @@ router.route('/join-request/:requestId')
   .post(protect, joinMatchRequest);
 
 router.route('/recommendations')
-  .get(protect, getMatchRecommendations);
+  .get(protect, getMatchRecommendations)
+  .post(protect, getAIRecommendations);
 
 router.route('/available-courts')
   .get(protect, getAvailableCourts);
@@ -39,5 +48,17 @@ router.route('/invitation/:invitationId')
 
 router.route('/history')
   .get(protect, getMatchHistory);
+
+// Test route
+router.get('/test', (req, res) => {
+  console.log('Test route hit');
+  res.json({ message: 'Test route working' });
+});
+
+// AI-specific routes
+router.route('/sports').get(getSports);
+
+router.route('/update')
+  .post(protect, updateAIModel);
 
 export default router;

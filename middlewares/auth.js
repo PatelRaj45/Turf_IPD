@@ -26,8 +26,11 @@ const protect = async (req, res, next) => {
     }
 
     try {
+      // Get JWT secret with fallback
+      const secret = process.env.JWT_SECRET || 'fallback_secret_for_development_only_do_not_use_in_production';
+      
       // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, secret);
 
       // Attach user to request object
       req.user = await User.findById(decoded.id);
@@ -41,12 +44,14 @@ const protect = async (req, res, next) => {
 
       next();
     } catch (error) {
+      console.error('Token verification error:', error.message);
       return res.status(401).json({
         success: false,
-        error: 'Not authorized to access this route'
+        error: 'Not authorized to access this route - invalid token'
       });
     }
   } catch (error) {
+    console.error('Auth middleware error:', error);
     next(error);
   }
 };

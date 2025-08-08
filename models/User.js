@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: [true, 'Please add a phone number'],
-    match: [/^\d{10}$/, 'Please add a valid 10-digit phone number']
+    match: [/^(\+?\d{1,3}[- ]?)?\d{5,15}$/, 'Please add a valid phone number']
   },
   password: {
     type: String,

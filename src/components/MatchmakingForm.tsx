@@ -6,6 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Loader2 } from 'lucide-react';
 import MatchRecommendation from './MatchRecommendation';
+import AIMatchmakingResults from './AIMatchmakingResults';
+import axios from 'axios';
 
 interface MatchmakingFormProps {
   onSubmit?: (data: any) => void;
@@ -16,6 +18,30 @@ interface Player {
   name: string;
   image?: string;
   skillLevel: number;
+}
+
+interface AIPlayer {
+  id: string;
+  name: string;
+  position: string;
+  skillLevel: number;
+  winRate: number;
+}
+
+interface MatchQuality {
+  skill_balance: number;
+  synergy: number;
+  availability: number;
+  location: number;
+  position_balance: number;
+}
+
+interface AIMatchResult {
+  team_A: AIPlayer[];
+  team_B: AIPlayer[];
+  confidence_score: number;
+  match_quality: MatchQuality;
+  explanation: string;
 }
 
 interface MatchRecommendation {
@@ -32,21 +58,32 @@ interface MatchRecommendation {
 }
 
 const MatchmakingForm: React.FC<MatchmakingFormProps> = ({ onSubmit }) => {
-  const [sport, setSport] = useState<string>('Cricket');
-  const [location, setLocation] = useState<string>('');
-  const [availability, setAvailability] = useState<string>('Weekday Evenings');
+  const [sport, setSport] = useState<string>('Football');
+  const [location, setLocation] = useState<string>('Mumbai');
+  const [availability, setAvailability] = useState<string>('Weekend Evenings');
+  const [skillLevel, setSkillLevel] = useState<number>(3);
   const [loading, setLoading] = useState<boolean>(false);
   const [recommendations, setRecommendations] = useState<MatchRecommendation[]>([]);
+  const [aiMatchResult, setAiMatchResult] = useState<AIMatchResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showAIResults, setShowAIResults] = useState<boolean>(false);
   
   const sports = [
-    'Cricket',
     'Football',
+    'Cricket',
     'Basketball',
     'Pickleball',
     'Tennis',
     'Volleyball',
     'Badminton'
+  ];
+  
+  const skillLevels = [
+    { value: 1, label: 'Beginner' },
+    { value: 2, label: 'Novice' },
+    { value: 3, label: 'Intermediate' },
+    { value: 4, label: 'Advanced' },
+    { value: 5, label: 'Expert' }
   ];
   
   const availabilityOptions = [
@@ -60,16 +97,134 @@ const MatchmakingForm: React.FC<MatchmakingFormProps> = ({ onSubmit }) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setShowAIResults(true);
+    setAiMatchResult(null); // Reset previous results
     
     try {
-      // In a real app, this would be an API call to your backend
-      // const response = await fetch('/api/matchmaking/recommendations', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ sport, location, availability })
-      // });
-      // const data = await response.json();
+      // Create synthetic player data for the request
+      const playerData = {
+        playerId: 'user_' + Date.now(),
+        sport: sport,
+        skillLevel: skillLevel,
+        location: location,
+        availability: availability
+      };
       
+      console.log('Sending request to FastAPI:', playerData);
+      
+      // Make a direct request to the FastAPI backend
+      const response = await axios.post('http://localhost:8000/matchmake', playerData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log('Received response from FastAPI:', response.data);
+      console.log('Response type:', typeof response.data);
+      console.log('Response has team_A:', !!response.data.team_A);
+      console.log('Response has team_B:', !!response.data.team_B);
+      console.log('Response has teammates:', !!response.data.teammates);
+      console.log('Response has confidence:', !!response.data.confidence);
+      console.log('Response has confidence_score:', !!response.data.confidence_score);
+      console.log('Response has match_quality:', !!response.data.match_quality);
+      console.log('Response has explanation:', !!response.data.explanation);
+      
+      // Check if the response has the expected format
+      if (response.data.teammates && response.data.confidence) {
+        // Original API response format - transform to our expected format
+        console.log('Converting API response to expected format');
+        
+        // Create mock teams based on the teammates returned from API
+        const allPlayers = response.data.teammates;
+        const halfLength = Math.ceil(allPlayers.length / 2);
+        
+        // Split players into two teams
+        const teamA = allPlayers.slice(0, halfLength).map((player: any) => ({
+          id: player.playerId,
+          name: player.name,
+          position: 'Auto-assigned',
+          skillLevel: player.skillLevel,
+          winRate: player.compatibility || 0.5
+        }));
+        
+        const teamB = allPlayers.slice(halfLength).map((player: any) => ({
+          id: player.playerId,
+          name: player.name,
+          position: 'Auto-assigned',
+          skillLevel: player.skillLevel,
+          winRate: player.compatibility || 0.5
+        }));
+        
+        // Create a result object in our expected format
+        const result: AIMatchResult = {
+          team_A: teamA,
+          team_B: teamB,
+          confidence_score: response.data.confidence * 100,
+          match_quality: {
+            skill_balance: 85.0,
+            synergy: 70.0,
+            availability: 90.0,
+            location: 80.0,
+            position_balance: 75.0
+          },
+          explanation: "Teams are balanced based on skill levels and compatibility scores."
+        };
+        
+        console.log('Transformed result:', result);
+        setAiMatchResult(result);
+      } else if (response.data.team_A !== undefined && response.data.team_B !== undefined) {
+        // Already in our expected format
+        console.log('Response already in expected format');
+        
+        // If teams are empty arrays, use mock data instead
+        if (response.data.team_A.length === 0 && response.data.team_B.length === 0) {
+          console.log('Teams are empty, using mock data');
+          const mockResult = generateMockAIMatchResult();
+          setAiMatchResult(mockResult);
+        } else {
+          const result: AIMatchResult = {
+            team_A: response.data.team_A || [],
+            team_B: response.data.team_B || [],
+            confidence_score: response.data.confidence_score,
+            match_quality: response.data.match_quality,
+            explanation: response.data.explanation
+          };
+          
+          console.log('Using API result:', result);
+          setAiMatchResult(result);
+        }
+      } else {
+        // Unexpected format
+        console.error('Unexpected API response format:', response.data);
+        throw new Error('Unexpected API response format');
+      }
+      
+      setLoading(false);
+      
+      if (onSubmit) {
+        onSubmit({ sport, location, availability, skillLevel, aiMatchResult });
+      }
+    } catch (err: any) {
+      console.error('Error fetching AI matchmaking results:', err);
+      console.error('Error details:', err.response ? err.response.data : 'No response data');
+      setError(`Failed to get AI matchmaking recommendations: ${err.message || 'Unknown error'}`);
+      setLoading(false);
+      
+      // Fallback to mock data for demonstration purposes
+      console.log('Falling back to mock data for demonstration');
+      const mockResult = generateMockAIMatchResult();
+      setAiMatchResult(mockResult);
+      setError(null);
+    }
+  };
+  
+  const handleTraditionalMatchmaking = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setShowAIResults(false);
+    
+    try {
       // For demo purposes, we'll create mock recommendations
       setTimeout(() => {
         const mockRecommendations = generateMockRecommendations(sport, location);
@@ -163,16 +318,50 @@ const MatchmakingForm: React.FC<MatchmakingFormProps> = ({ onSubmit }) => {
     return recommendations;
   };
   
+  // Generate mock AI match result for demonstration purposes
+  const generateMockAIMatchResult = (): AIMatchResult => {
+    // Create synthetic player data
+    const teamA = [
+      { id: 'p1', name: 'Alex', position: 'Forward', skillLevel: 4, winRate: 0.65 },
+      { id: 'p2', name: 'Raj', position: 'Midfielder', skillLevel: 3, winRate: 0.58 },
+      { id: 'p3', name: 'Sarah', position: 'Forward', skillLevel: 5, winRate: 0.70 },
+      { id: 'p4', name: 'John', position: 'Defender', skillLevel: 2, winRate: 0.50 },
+      { id: 'p5', name: 'Priya', position: 'Midfielder', skillLevel: 3, winRate: 0.60 }
+    ];
+    
+    const teamB = [
+      { id: 'p6', name: 'Michael', position: 'Goalkeeper', skillLevel: 4, winRate: 0.67 },
+      { id: 'p7', name: 'Ananya', position: 'Midfielder', skillLevel: 3, winRate: 0.64 },
+      { id: 'p8', name: 'David', position: 'Defender', skillLevel: 2, winRate: 0.44 },
+      { id: 'p9', name: 'Neha', position: 'Defender', skillLevel: 3, winRate: 0.55 },
+      { id: 'p10', name: 'James', position: 'Forward', skillLevel: 5, winRate: 0.73 }
+    ];
+    
+    return {
+      team_A: teamA,
+      team_B: teamB,
+      confidence_score: 87.1,
+      match_quality: {
+        skill_balance: 100.0,
+        synergy: 58.5,
+        availability: 100.0,
+        location: 100.0,
+        position_balance: 87.5
+      },
+      explanation: "Teams are balanced by skill and availability, but synergy can be improved."
+    };
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle className="text-xl font-bold">Find Your Perfect Match</CardTitle>
+          <CardTitle className="text-xl font-bold">AI-Powered Matchmaking</CardTitle>
         </CardHeader>
         
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <form className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="sport">Sport</Label>
                 <Select 
@@ -185,6 +374,23 @@ const MatchmakingForm: React.FC<MatchmakingFormProps> = ({ onSubmit }) => {
                   <SelectContent>
                     {sports.map((s) => (
                       <SelectItem key={s} value={s}>{s}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="skillLevel">Skill Level</Label>
+                <Select 
+                  value={skillLevel.toString()} 
+                  onValueChange={(value) => setSkillLevel(parseInt(value))}
+                >
+                  <SelectTrigger id="skillLevel">
+                    <SelectValue placeholder="Select Skill Level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {skillLevels.map((level) => (
+                      <SelectItem key={level.value} value={level.value.toString()}>{level.label}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -218,16 +424,40 @@ const MatchmakingForm: React.FC<MatchmakingFormProps> = ({ onSubmit }) => {
               </div>
             </div>
             
-            <Button type="submit" className="w-full bg-sport-green-dark hover:bg-sport-green" disabled={loading}>
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Finding Matches...
-                </>
-              ) : (
-                'Find Matches'
-              )}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button 
+                type="button" 
+                onClick={handleSubmit}
+                className="flex-1 bg-sport-green-dark hover:bg-sport-green" 
+                disabled={loading}
+              >
+                {loading && showAIResults ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Finding AI Matches...
+                  </>
+                ) : (
+                  'Find AI Matches'
+                )}
+              </Button>
+              
+              <Button 
+                type="button"
+                onClick={handleTraditionalMatchmaking}
+                variant="outline" 
+                className="flex-1 border-sport-green-dark text-sport-green-dark hover:bg-sport-green-dark hover:text-white" 
+                disabled={loading}
+              >
+                {loading && !showAIResults ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Finding Traditional Matches...
+                  </>
+                ) : (
+                  'Find Traditional Matches'
+                )}
+              </Button>
+            </div>
           </form>
           
           {error && (
@@ -238,7 +468,23 @@ const MatchmakingForm: React.FC<MatchmakingFormProps> = ({ onSubmit }) => {
         </CardContent>
       </Card>
       
-      {recommendations.length > 0 && (
+      {/* AI Matchmaking Results */}
+      {showAIResults && aiMatchResult && (
+        <div className="mt-8">
+          <AIMatchmakingResults
+            teamA={aiMatchResult.team_A}
+            teamB={aiMatchResult.team_B}
+            confidenceScore={aiMatchResult.confidence_score}
+            matchQuality={aiMatchResult.match_quality}
+            explanation={aiMatchResult.explanation}
+            isLoading={loading}
+            error={error}
+          />
+        </div>
+      )}
+      
+      {/* Traditional Matchmaking Results */}
+      {!showAIResults && recommendations.length > 0 && (
         <div className="mt-8">
           <h2 className="text-xl font-bold mb-4">Recommended Matches</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

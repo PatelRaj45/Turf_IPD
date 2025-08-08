@@ -276,16 +276,16 @@ class DQNModel:
         """Save model weights to file"""
         if filepath is None:
             os.makedirs("models", exist_ok=True)
-            filepath = f"models/dqn_model_{datetime.now().strftime('%Y%m%d_%H%M%S')}.h5"
+            filepath = f"models/dqn_model_{datetime.now().strftime('%Y%m%d_%H%M%S')}.weights.h5"
         
         self.main_network.save_weights(filepath)
         
         # Also save a reference to the latest model
-        self.main_network.save_weights("models/latest_model.h5")
+        self.main_network.save_weights("models/latest_model.weights.h5")
         
         print(f"Model weights saved to {filepath}")
     
-    def load_weights_if_exists(self, filepath: str = "models/latest_model.h5"):
+    def load_weights_if_exists(self, filepath: str = "models/latest_model.weights.h5"):
         """Load model weights if file exists"""
         if os.path.exists(filepath):
             try:

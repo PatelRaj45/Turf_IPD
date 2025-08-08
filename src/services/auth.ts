@@ -29,22 +29,38 @@ export interface User {
 const authService = {
   // Register a new user
   register: async (userData: RegisterData) => {
-    const response = await api.post('/auth/register', userData);
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+    try {
+      const response = await api.post('/auth/register', userData);
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.data || response.data.user));
+      }
+      return {
+        token: response.data.token,
+        user: response.data.data || response.data.user
+      };
+    } catch (error: any) {
+      console.error('Registration error:', error.response?.data || error.message);
+      throw error;
     }
-    return response.data;
   },
 
   // Login user
   login: async (userData: LoginData) => {
-    const response = await api.post('/auth/login', userData);
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+    try {
+      const response = await api.post('/auth/login', userData);
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.data || response.data.user));
+      }
+      return {
+        token: response.data.token,
+        user: response.data.data || response.data.user
+      };
+    } catch (error: any) {
+      console.error('Login error:', error.response?.data || error.message);
+      throw error;
     }
-    return response.data;
   },
 
   // Logout user

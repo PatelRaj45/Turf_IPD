@@ -71,11 +71,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         description: `Welcome back, ${response.user.name}!`,
       });
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      const errorMessage = err.response?.data?.error || err.response?.data?.message || 'Login failed. Please try again.';
+      setError(errorMessage);
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: err.response?.data?.message || 'Login failed. Please try again.',
+        description: errorMessage,
       });
       throw err;
     } finally {
@@ -95,11 +96,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         description: `Welcome to TurfX, ${response.user.name}!`,
       });
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      const errorMessage = err.response?.data?.error || err.response?.data?.message || 'Registration failed. Please try again.';
+      setError(errorMessage);
       toast({
         variant: 'destructive',
         title: 'Registration Failed',
-        description: err.response?.data?.message || 'Registration failed. Please try again.',
+        description: errorMessage.includes('already exists')
+          ? 'This email is already registered. Please use a different email or sign in.'
+          : (err.response?.data?.message || 'Registration failed. Please try again.'),
       });
       throw err;
     } finally {

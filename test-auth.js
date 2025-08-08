@@ -16,7 +16,7 @@ async function testAuth() {
     console.log('\n2. Testing user registration...');
     const registerData = {
       name: 'Test User',
-      email: 'test@example.com',
+      email: `test${Date.now()}@example.com`, // Use timestamp to ensure unique email
       phone: '1234567890',
       password: 'password123'
     };
@@ -92,4 +92,4 @@ async function testAuth() {
 }
 
 // Run the test
-testAuth(); 
+testAuth();

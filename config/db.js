@@ -6,7 +6,8 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY = 5000;
 
 // Directly use the MongoDB connection string if environment variable is not available
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://rajbhaveshpatel1:yKKUw14c3kyX8929@cluster0.v7m6ruh.mongodb.net/sample_mflix?retryWrites=true&w=majority&appName=Cluster0';
+// Fallback to local MongoDB if remote connection is not available
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/turfx';
 
 /**
  * Connect to MongoDB with retry logic

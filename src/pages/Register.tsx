@@ -63,6 +63,13 @@ const Register = () => {
     } catch (err) {
       // Error is handled in the AuthContext
       console.error('Registration error:', err);
+      // Clear the form if there's an error related to existing email
+      if (error && error.includes('already exists')) {
+        setFormData({
+          ...formData,
+          email: '',
+        });
+      }
     }
   };
 
@@ -136,7 +143,13 @@ const Register = () => {
               />
             </div>
             {passwordError && <div className="text-sm text-red-500">{passwordError}</div>}
-            {error && <div className="text-sm text-red-500">{error}</div>}
+            {error && (
+              <div className="text-sm text-red-500">
+                {error.includes('already exists') 
+                  ? 'This email is already registered. Please use a different email or sign in.' 
+                  : error}
+              </div>
+            )}
             <Button
               type="submit"
               className="w-full"
