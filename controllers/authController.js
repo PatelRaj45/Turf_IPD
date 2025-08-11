@@ -143,11 +143,25 @@ export const logout = async (req, res, next) => {
  */
 export const updateDetails = async (req, res, next) => {
   try {
+
+    console.log(req.body);
+
     const fieldsToUpdate = {
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone
     };
+
+    // If address is provided, parse it
+    if (req.body.address) {
+      const parts = req.body.address.trim().split(" ");
+      const zipCode = parts.pop(); // last part
+      const state = parts.pop();   // second last part
+      const city = parts.pop();    // third last part
+      const street = parts.join(" "); // everything else at the start
+
+      fieldsToUpdate.address = { street, city, state, zipCode };
+    }
 
     // Remove undefined fields
     Object.keys(fieldsToUpdate).forEach(
@@ -158,6 +172,7 @@ export const updateDetails = async (req, res, next) => {
       new: true,
       runValidators: true
     });
+    console.log(user);
 
     res.status(200).json({
       success: true,

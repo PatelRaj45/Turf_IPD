@@ -74,11 +74,11 @@ const Navbar = () => {
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center space-x-1 border-sport-green-dark text-sport-green-dark hover:bg-sport-green-dark hover:text-white">
-                  <Avatar className="h-8 w-8 mr-1">
+                <Button variant="outline" className="flex group items-center space-x-1 border-sport-green-dark text-sport-green-dark hover:bg-sport-green-dark">
+                  <Avatar className="h-8 w-8 mr-1 group-hover:text-sport-green-dark">
                     <AvatarFallback>{getUserInitials()}</AvatarFallback>
                   </Avatar>
-                  <span className="hidden sm:inline">{user?.name?.split(' ')[0]}</span>
+                  <span className="group-hover:text-white hidden sm:inline">{user?.name?.split(' ')[0]}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

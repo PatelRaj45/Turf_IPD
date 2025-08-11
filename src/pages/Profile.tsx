@@ -22,7 +22,9 @@ import {
   TabsTrigger,
 } from '../components/ui/tabs';
 
+
 const Profile = () => {
+  
   const { user, isAuthenticated, loading: authLoading, logout } = useAuth();
   const [loading, setLoading] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -31,6 +33,7 @@ const Profile = () => {
     phone: '',
     address: '',
   });
+
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -53,7 +56,7 @@ const Profile = () => {
         name: user.name || '',
         email: user.email || '',
         phone: user.phone || '',
-        address: user.address || '',
+        address: `${user.address.street} ${user.address.city} ${user.address.state} ${user.address.zipCode}` || '',
       });
     }
   }, [user, isAuthenticated, authLoading, navigate]);
@@ -210,6 +213,7 @@ const Profile = () => {
                     name="address"
                     value={profileData.address}
                     onChange={handleProfileChange}
+                    placeholder='street city state pincode'
                     rows={3}
                   />
                 </div>
