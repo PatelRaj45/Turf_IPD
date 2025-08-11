@@ -7,7 +7,7 @@ const RETRY_DELAY = 5000;
 
 // Directly use the MongoDB connection string if environment variable is not available
 // Fallback to local MongoDB if remote connection is not available
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/turfx';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/TurfIPD';
 
 /**
  * Connect to MongoDB with retry logic

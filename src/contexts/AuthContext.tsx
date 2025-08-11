@@ -9,20 +9,18 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (data: LoginData) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
-  loginWithGoogle: (userData: User, token: string) => void;
   logout: () => Promise<void>;
   clearError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => { // explicit return type
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
+
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -111,16 +109,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const loginWithGoogle = (userData: User, token: string) => {
-    setUser(userData);
-    setIsAuthenticated(true);
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(userData));
-    toast({
-      title: 'Login Successful',
-      description: `Welcome back, ${userData.name}!`,
-    });
-  };
+
 
   const logout = async () => {
     try {
@@ -155,7 +144,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         isAuthenticated,
         login,
         register,
-        loginWithGoogle,
         logout,
         clearError,
       }}

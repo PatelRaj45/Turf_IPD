@@ -5,9 +5,7 @@ import {
   getMe,
   logout,
   updateDetails,
-  updatePassword,
-  googleLogin,
-  linkGoogleAccount
+  updatePassword
 } from '../controllers/authController.js';
 
 const router = express.Router();
@@ -18,8 +16,6 @@ import { protect } from '../middlewares/auth.js';
 // Routes
 router.post('/register', register);
 router.post('/login', login);
-router.post('/google', googleLogin);
-router.post('/link-google', protect, linkGoogleAccount);
 router.get('/me', protect, getMe);
 router.get('/logout', protect, logout);
 router.put('/updatedetails', protect, updateDetails);

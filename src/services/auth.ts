@@ -65,9 +65,10 @@ const authService = {
 
   // Logout user
   logout: async () => {
+    const res = await api.get('/auth/logout'); // send token first
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    return await api.get('/auth/logout');
+    return res;
   },
 
   // Get current user

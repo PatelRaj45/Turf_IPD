@@ -1,10 +1,6 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { OAuth2Client } from 'google-auth-library';
-
-// Initialize Google OAuth client
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 /**
  * @desc    Register a new user
@@ -198,132 +194,16 @@ export const updatePassword = async (req, res, next) => {
   }
 };
 
-/**
- * @desc    Google OAuth login
- * @route   POST /api/auth/google
- * @access  Public
- */
-export const googleLogin = async (req, res, next) => {
-  try {
-    const { idToken } = req.body;
 
-    if (!idToken) {
-      return res.status(400).json({
-        success: false,
-        error: 'Google ID token is required'
-      });
-    }
 
-    // Verify the Google ID token
-    const ticket = await googleClient.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_CLIENT_ID
-    });
 
-    const payload = ticket.getPayload();
-    const { email, name, picture, sub: googleId } = payload;
-
-    // Check if user already exists
-    let user = await User.findOne({ email });
-
-    if (!user) {
-      // Create new user with Google info
-      user = await User.create({
-        name,
-        email,
-        googleId,
-        profilePicture: picture,
-        password: Math.random().toString(36).slice(-8), // Generate random password
-        isGoogleUser: true
-      });
-    } else {
-      // Update existing user with Google info if not already set
-      if (!user.googleId) {
-        user.googleId = googleId;
-        user.isGoogleUser = true;
-        if (!user.profilePicture) {
-          user.profilePicture = picture;
-        }
-        await user.save();
-      }
-    }
-
-    // Send token response
-    sendTokenResponse(user, 200, res);
-  } catch (error) {
-    console.error('Google login error:', error);
-    return res.status(401).json({
-      success: false,
-      error: 'Invalid Google token'
-    });
-  }
-};
-
-/**
- * @desc    Link Google account to existing account
- * @route   POST /api/auth/link-google
- * @access  Private
- */
-export const linkGoogleAccount = async (req, res, next) => {
-  try {
-    const { idToken } = req.body;
-
-    if (!idToken) {
-      return res.status(400).json({
-        success: false,
-        error: 'Google ID token is required'
-      });
-    }
-
-    // Verify the Google ID token
-    const ticket = await googleClient.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_CLIENT_ID
-    });
-
-    const payload = ticket.getPayload();
-    const { email, sub: googleId } = payload;
-
-    // Check if the Google account is already linked to another user
-    const existingGoogleUser = await User.findOne({ googleId });
-    if (existingGoogleUser && existingGoogleUser._id.toString() !== req.user.id) {
-      return res.status(400).json({
-        success: false,
-        error: 'This Google account is already linked to another user'
-      });
-    }
-
-    // Update current user with Google info
-    const user = await User.findByIdAndUpdate(
-      req.user.id,
-      {
-        googleId,
-        isGoogleUser: true,
-        profilePicture: payload.picture
-      },
-      { new: true }
-    );
-
-    res.status(200).json({
-      success: true,
-      data: user
-    });
-  } catch (error) {
-    console.error('Link Google account error:', error);
-    return res.status(401).json({
-      success: false,
-      error: 'Invalid Google token'
-    });
-  }
-};
 
 /**
  * Helper function to get token from model, create cookie and send response
  */
 const sendTokenResponse = (user, statusCode, res) => {
   try {
-    // Create token with fallback secret if needed
-    const secret = process.env.JWT_SECRET || 'fallback_secret_for_development_only_do_not_use_in_production';
+    // Create token with fallback secret but secret is handle internally
     const token = user.getSignedJwtToken();
     
     // Set cookie expiration
